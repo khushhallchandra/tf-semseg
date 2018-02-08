@@ -11,8 +11,8 @@ from tfsemseg.loader import get_data_loader, get_data_path
 
 def train(args):
 
-	data_path = get_data_path(args.dataset)
-	loader = get_data_loader(args.dataset)
+    data_path = get_data_path(args.dataset)
+    loader = get_data_loader(args.dataset)
 
     tr_loader = loader(data_path, img_size=(args.img_rows, args.img_cols))
     trainloader = data.DataLoader(tr_loader, batch_size=args.batch_size, num_workers=args.n_workers, shuffle=True, drop_last=True)
@@ -28,18 +28,18 @@ def train(args):
     model get_model(args.arch)
     logits = model(x, n_classes=n_classes, feature_scale=args.feature_scale)
 
-	loss_op = get_loss(args.loss)    
-	optimizer = tf.train.AdamOptimizer(learning_rate=args.l_rate).minimize(loss_op)
+    loss_op = get_loss(args.loss)    
+    optimizer = tf.train.AdamOptimizer(learning_rate=args.l_rate).minimize(loss_op)
 
-	if not os.path.exists(save_dir):
-	    os.makedirs(save_dir)
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
     save_path = os.path.join(save_dir, 'model')
     saver = tf.train.Saver()
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         if args.resume not None:
-        	saver.restore(sess, resume)
+            saver.restore(sess, resume)
 
         best_val_loss = 1.0
         for epoch in range(args.n_epochs):
